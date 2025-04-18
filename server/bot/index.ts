@@ -128,16 +128,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
               const reply = await message.reply({
                 embeds: [{
                   title: '🎵 Audio File Detected',
-                  description: `**File name:** ${fileName}\n📥 **Link:**\n***FOR PC:***\n\`\`\`${downloadUrl}\`\`\`\n***FOR MOBILE (Hold To Copy):***\n${downloadUrl}`,
+                  description: `**File name:** ${fileName}\n📥 **Link:**`,
                   color: 0x7289DA,
                   fields: [{
-                    name: '***FOR PC***'
+                    name: '***FOR PC***',
                     value: `\`\`\`${downloadUrl}\`\`\``
-                  }
+                  },
                   {
-                    name: '***FOR MOBILE (HOLD TO COPY):***'
+                    name: '***FOR MOBILE (HOLD TO COPY):***',
                     value: `${downloadUrl}`
-                  }]
+                  }],
                   footer: {
                     text: 'Audio Link Bot'
                   },
