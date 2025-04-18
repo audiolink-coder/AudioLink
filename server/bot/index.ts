@@ -46,44 +46,52 @@ export async function setupBot(storage: IStorage) {
       });
 
       // Handle slash commands
-      client.on(Events.InteractionCreate, async (interaction) => {
-        if (!interaction.isChatInputCommand()) return;
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
 
-        const { commandName } = interaction;
+  const { commandName } = interaction;
 
-        if (commandName === "activate") {
-          isActive = true;
-          await storage.updateBotSettings({ isActive: true });
-          
-          await interaction.reply("Bot activated! I will now respond to audio file uploads with download links.");
-          
-          // Log activation
-          const channelName = interaction.channel?.type === 0 ? interaction.channel.name : "unknown";
-          await storage.addLogEntry({
-            type: LogEntryType.BOT_ACTION,
-            message: `Bot activated in channel #${channelName} by @${interaction.user.username}`,
-            channelId: interaction.channelId,
-            userId: interaction.user.id,
-          });
-        }
-        
-        if (commandName === "deactivate") {
-          isActive = false;
-          await storage.updateBotSettings({ isActive: false });
-          
-          await interaction.reply("Bot deactivated! I will no longer respond to audio file uploads.");
-          
-          // Log deactivation
-          const channelName = interaction.channel?.type === 0 ? interaction.channel.name : "unknown";
-          await storage.addLogEntry({
-            type: LogEntryType.BOT_ACTION,
-            message: `Bot deactivated in channel #${channelName} by @${interaction.user.username}`,
-            channelId: interaction.channelId,
-            userId: interaction.user.id,
-          });
-        }
-      });
+  // Check if user is the server owner
+  if (!interaction.guild || interaction.user.id !== interaction.guild.ownerId) {
+    await interaction.reply({
+      content: "Only the server owner can use this command!",
+      ephemeral: true
+    });
+    return;
+  }
 
+  if (commandName === "activate") {
+    isActive = true;
+    await storage.updateBotSettings({ isActive: true });
+    
+    await interaction.reply("Bot activated! I will now respond to audio file uploads with download links.");
+    
+    // Log activation
+    const channelName = interaction.channel?.type === 0 ? interaction.channel.name : "unknown";
+    await storage.addLogEntry({
+      type: LogEntryType.BOT_ACTION,
+      message: `Bot activated in channel #${channelName} by @${interaction.user.username}`,
+      channelId: interaction.channelId,
+      userId: interaction.user.id,
+    });
+  }
+  
+  if (commandName === "deactivate") {
+    isActive = false;
+    await storage.updateBotSettings({ isActive: false });
+    
+    await interaction.reply("Bot deactivated! I will no longer respond to audio file uploads.");
+    
+    // Log deactivation
+    const channelName = interaction.channel?.type === 0 ? interaction.channel.name : "unknown";
+    await storage.addLogEntry({
+      type: LogEntryType.BOT_ACTION,
+      message: `Bot deactivated in channel #${channelName} by @${interaction.user.username}`,
+      channelId: interaction.channelId,
+      userId: interaction.user.id,
+    });
+  }
+});
       // Handle message events to check for audio attachments
       client.on(Events.MessageCreate, async (message) => {
         // Ignore bot messages and messages without attachments
