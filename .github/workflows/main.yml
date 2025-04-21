@@ -1,7 +1,7 @@
 name: Web Build + Deployment to GitHub Pages 
 
 on:
-  # Runs on push to any of the below branches h
+  # Runs on push rto any of the below branches h
   push:
     branches:
       - main
