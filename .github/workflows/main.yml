@@ -1,4 +1,4 @@
-name: Run Discord Bot and Deploy Web (if needed)
+name: Run Discord Bot and Deploy Web (if neede)
 
 on:
   push:
