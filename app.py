@@ -227,7 +227,7 @@ def create_template():
 
 # Function to run the Discord bot
 def run_bot():
-    bot.run(bot.token)
+    bot.run(os.getenv("DISCORD_TOKEN"))
 
 # Main function to start both Flask and Discord bot
 def main():
