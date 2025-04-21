@@ -63,8 +63,8 @@ jobs:
 
     - name: Install flet-cli ${{ env.FLET_CLI_VERSION }}
       run: |
-        python -m pip install --upgrade pip
-        pip install flet-cli==$FLET_CLI_VERSION
+        pip install --upgrade pip
+        pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
     - name: run app.py
       run: |
