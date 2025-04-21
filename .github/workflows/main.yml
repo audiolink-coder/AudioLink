@@ -11,7 +11,7 @@ on:
     branches:
       - main
 
-  # Allows you to run this workflow manually from the Actions tab of the repository
+  # Allows you to rhun this workflow manually from the Actions tab of the repository
   workflow_dispatch:
 
 concurrency:
