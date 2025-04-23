@@ -1,7 +1,7 @@
 # AudioLink Discord Bot
 
-**AudioLink** is a Discord bot that extracts and returns audio from uploaded videos and links. It supports all kind of format.
-**Bot Invitation:** 
+**AudioLink** is a Discord bot that extracts and returns audio from uploaded audio, video, and links. It supports all kind of format.
+**Bot Invitation:** https://discord.com/oauth2/authorize?client_id=1362763091674402916&permissions=83968&integration_type=0&scope=bot
 
 ## Features
 
