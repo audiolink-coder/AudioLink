@@ -28,6 +28,6 @@
 ## Installation (For Self-Hosting)
 
 ```bash
-git clone https://github.com/audiolink-coder/audiolink-bot.git
+git clone https://github.com/audiolink-coder/AudioLink.git
 cd audiolink-bot
 pip install -r requirements.txt
