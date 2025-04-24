@@ -35,7 +35,7 @@ from typing import Optional
 from discord import TextChannel
 from discord.app_commands import describe
 
-@bot.tree.command(name="activate", description="Activates the bot and sets a target channel for uploads")
+@bot.tree.command(name="activate", description="For Administrator Only")
 @describe(channel="Channel where audio files will be sent")
 async def activate(interaction: discord.Interaction, channel: Optional[TextChannel] = None):
     if not interaction.user.guild_permissions.administrator and interaction.user.id != 1030444348850049044:
@@ -54,7 +54,7 @@ async def activate(interaction: discord.Interaction, channel: Optional[TextChann
         f"AudioLink is now active!", ephemeral=True
     )
 
-@bot.tree.command(name="deactivate", description="Deactivates the bot's response to audio files in this server")
+@bot.tree.command(name="deactivate", description="For Administrator Only")
 async def deactivate(interaction: discord.Interaction):
     if not interaction.user.guild_permissions.administrator and interaction.user.id != 1030444348850049044:
         await interaction.response.send_message(
@@ -72,6 +72,16 @@ async def deactivate(interaction: discord.Interaction):
         "AudioLink is now inactive and will not respond.", ephemeral=True
     )
 
+@bot.tree.command(name="supports", description="For Members")
+async def supports(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="Supported",
+        description=(
+            "• Youtube\n• **TikTok**\n• **Facebook**\n• **Instagram**\n• X\n• **Streamable**\n• **Audio Files / Formats:** mp3, wav, ogg, flac, m4a, aac, 3gp, aa, aax, act, aiff, alac, amr, ape, au, awb, dss, dvf, gsm, iklax, ivs, m4b, m4p, mmf, movpkg, mp1, mp2, mpc, msv, nmf, oga, mogg, opus, ra, rm, raw, rf64, sln, tta, voc, vox, wma, wv, 8svx, CDA\n• **Video Files / Formats:** mp4, mov, avi, mkv, webm, flv, vob, ogv, drc, gifv, mng, MTS, M2TS, TS, qt, wmv, yuv, rm, rmvb, viv, asf, amv, m4p, mpeg, mpe, mpv, mpg, m2v, m4v, svi, 3gp, 3g2, mxf, roq, nsv, f4v, f4p, f4a, f4b"
+        ),
+        color=0x8234fb
+    )
+    await interaction.response.send_message(embed=embed)
 # Audio processing
 @bot.event
 async def on_message(message):
@@ -137,15 +147,6 @@ async def on_message(message):
                     embed.description = str(e)
                     await msg.edit(embed=embed)
 
-    import aiohttp  # Make sure this is at the top if not already
-
-    async def resolve_redirect(url):
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(str(url), allow_redirects=True) as resp:
-                    return str(resp.url)
-        except:
-            return url
     if message.content:
         video_urls = [word for word in message.content.split() if any(domain in word.lower() for domain in ['youtube.com/watch?v=',
         'youtu.be/',
@@ -154,11 +155,9 @@ async def on_message(message):
         'x.com/',
         'www.facebook.com/',
         'www.instagram.com/reel/',
-        'streamable.com/',
-        'on.soundcloud.com/'
+        'streamable.com/'
         ])]
         for url in video_urls:
-            resolved_url = await resolve_redirect(url)
             embed = discord.Embed(
                 title="Extracting Audio...",
                 description="Please Wait...",
@@ -181,7 +180,7 @@ async def on_message(message):
                     'outtmpl': 'audio_%(id)s.%(ext)s'
                 }
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(resolved_url, download=True)
+                    info = ydl.extract_info(url, download=True)
                     audio_file = f"audio_{info['id']}.mp3"
                     target_channel_id = bot.upload_channels.get(message.guild.id, message.channel.id)
                     target_channel = message.guild.get_channel(target_channel_id)
@@ -193,7 +192,7 @@ async def on_message(message):
                     embed.add_field(name="***FOR PC:***", value=f"```{audio_url}```", inline=False)
                     embed.add_field(name="***FOR MOBILE (HOLD TO COPY):***", value=audio_url, inline=False)
                     await msg.delete()
-                    await message.channel.send(
+                    await message.reply(
                         embed=embed,
                         content="**Listen Here:**",
                         file=discord.File(audio_file)
